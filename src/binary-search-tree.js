@@ -7,11 +7,10 @@ const { NotImplementedError } = require("../extensions/index.js");
  * using Node from extensions
  */
 class BinarySearchTree {
-  constructor(data, insertLeftRight, left, right) {
+  constructor(data, left, right) {
     this.data = data || null;
     this.left = left || null;
     this.right = right || null;
-    this.leftNode = insertLeftRight || false;
   }
   root() {
     // throw new NotImplementedError('Not implemented');
@@ -32,14 +31,14 @@ class BinarySearchTree {
     while (currentNode) {
       if (data < currentNode.data) {
         if (currentNode.left === null) {
-          currentNode.left = new BinarySearchTree(data, true);
+          currentNode.left = new BinarySearchTree(data);
           return;
         } else {
           currentNode = currentNode.left;
         }
       } else {
         if (currentNode.right === null) {
-          currentNode.right = new BinarySearchTree(data, false);
+          currentNode.right = new BinarySearchTree(data);
           return;
         } else {
           currentNode = currentNode.right;
@@ -74,77 +73,58 @@ class BinarySearchTree {
     return null;
   }
 
+  _removeBSTNode(root, data) {
+    if (!root) return root;
+    // console.log(root, data);
+
+    // debugger;
+    if (root.data < data) {
+      root.right = this._removeBSTNode(root.right, data);
+    } else if (root.data > data) {
+      root.left = this._removeBSTNode(root.left, data);
+    } else {
+      // one or no children
+      if (!root.left) return root.right;
+      if (!root.right) return root.left;
+      // return root.left || root.right;
+      // debugger;
+
+      //two children find min right
+      root.data = this._findMinFromNode(root.right);
+
+      root.right = this._removeBSTNode(root.right, root.data);
+    }
+    return root;
+  }
+
   remove(data) {
     // throw new NotImplementedError("Not implemented");
     // remove line with error and write your code here
 
     let root = this.root();
-    let parent = root;
+    root = this._removeBSTNode(root, data);
+  }
 
-    while (root) {
-      // debugger;
-      // console.log(parent, root);
-      if (root.data === data) {
-        if (!root.left && !root.right) {
-          // no children
-          if (parent.left === root) {
-            parent.left = null;
-          } else {
-            parent.right = null;
-          }
-          break;
-        } else if (root.left && root.right) {
-          //have two children
-
-          let newRoot = root.left;
-          while (newRoot.right) {
-            newRoot = newRoot.right;
-          }
-
-          // let RootToDell = root.max(root.left);
-
-          const newDataAfterDell = newRoot.data;
-
-          // RootToDell = null;
-
-          root.data = newDataAfterDell;
-          break;
-        } else {
-          //have one children
-          const child = root.left || root.right;
-
-          if (root == parent.left) {
-            parent.left = child;
-          } else {
-            parent.right = child;
-          }
-          break;
-        }
-      }
-
-      if (root.data < data) {
-        parent = root;
-        root = root.right;
-        continue;
-      }
-      if (root.data > data) {
-        parent = root;
-        root = root.left;
-      }
+  _findMinFromNode(root) {
+    while (root.left) {
+      root = root.left;
     }
+
+    return root.data;
   }
 
   min() {
     // throw new NotImplementedError("Not implemented");
     // remove line with error and write your code here
 
-    let root = this.root();
+    return this._findMinFromNode(this.root());
+    // let root = this.root();
 
-    while (root.left) {
-      root = root.left;
-    }
+    // while (root.left) {
+    //   root = root.left;
+    // }
 
-    return root.data;
+    // return root.data;
   }
 
   max() {
