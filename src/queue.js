@@ -16,7 +16,6 @@ const { ListNode } = require("../extensions/list-node.js");
 class Queue {
   constructor() {
     this.store = null;
-    // this = this.next;
   }
   getUnderlyingList() {
     // throw new NotImplementedError('Not implemented');
