@@ -40,7 +40,6 @@ function removeKFromList(l, k) {
     }
     l = l.next;
   }
-  // console.log(root);
   return root.next;
 }
 
